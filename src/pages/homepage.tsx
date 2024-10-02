@@ -45,9 +45,9 @@ export default function HomePage() {
               connection. Play anytime, anywhere.
             </p>
             <div className="flex justify-center space-x-4">
-              <Link to="#download">
+              <Link to="#play">
                 {" "}
-                <RainbowButton>Download Now</RainbowButton>
+                <RainbowButton>Play Now</RainbowButton>
               </Link>
               <Button size="lg" variant="outline" asChild>
                 <Link to="#features">Learn More</Link>
@@ -116,7 +116,7 @@ export default function HomePage() {
               worries!
             </p>
             <Button size="lg" asChild>
-              <Link to="/animation">Download for Free</Link>
+              <Link to="/">Download for Free</Link>
             </Button>
           </div>
         </section>
