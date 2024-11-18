@@ -9,6 +9,7 @@ import { NotFoundPage } from "./pages/404";
 import { LoginPage } from "./pages/(auth)/login";
 import DashboardLayout from "./pages/dashboard/dashboard-layout";
 import { TicTacToe } from "./pages/dashboard/_games/tic-tac-toe";
+import { GamesList } from "./pages/dashboard/game-list";
 
 const queryClient = new QueryClient();
 
@@ -36,7 +37,7 @@ const routers = createBrowserRouter([
             children: [
               {
                 index: true,
-                element: <>Dashboard</>,
+                element: <GamesList />,
               },
               {
                 path: "game",

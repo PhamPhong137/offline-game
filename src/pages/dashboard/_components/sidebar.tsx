@@ -1,10 +1,10 @@
-import { Gamepad2, Home, Search, Settings } from 'lucide-react'
-import { Link, useLocation, useParams } from "react-router-dom"
+import { Gamepad2,  } from 'lucide-react'
+import { Link,   } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import SparklesText from "@/components/ui/sparkles-text"
 import { Separator } from "@/components/ui/separator"
-import { Input } from "@/components/ui/input"
+
 
 const offlineGames = [
   { id: 'tic-tac-toe', name: "Tic Tac Toe", icon: "🎮" },
@@ -14,32 +14,10 @@ const offlineGames = [
   { id: 5, name: "Minesweeper", icon: "💣" },
 ]
 
-const sidebarItems = [
-  {
-    label: "Home",
-    icon: <Home className="h-4 w-4" />,
-    href: "",
-  },
-  {
-    label: "Settings",
-    icon: <Settings className="h-4 w-4" />,
-    href: "settings",
-  },
-]
 
-const getLastPath = (pathname: string) => {
-  const paths = pathname.split('/')
-  return paths[paths.length - 1]
-}
 
 const Sidebar = () => {
-  const { pathname } = useLocation()
   const [createHover, setCreateHover] = useState(false)
-  const [searchTerm, setSearchTerm] = useState("")
-
-  const filteredGames = offlineGames.filter(game =>
-    game.name.toLowerCase().includes(searchTerm.toLowerCase())
-  )
 
   return (
     <div className="hidden border-r bg-muted/40 md:block h-full">
@@ -71,7 +49,7 @@ const Sidebar = () => {
             </Button>
           </SparklesText>
           <Separator className="mb-4" />
-          {filteredGames.map((game) => (
+          {offlineGames.map((game) => (
             <Link
               key={game.id}
               to={`/dashboard/abc/game/${game.id}`}
