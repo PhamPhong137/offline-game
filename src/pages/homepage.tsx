@@ -27,9 +27,9 @@ export default function HomePage() {
           </Link>
           <Link
             className="text-sm font-medium hover:underline underline-offset-4"
-            to="#about"
+            to="login"
           >
-            About
+            Login
           </Link>
         </nav>
       </header>
@@ -45,7 +45,7 @@ export default function HomePage() {
               connection. Play anytime, anywhere.
             </p>
             <div className="flex justify-center space-x-4">
-              <Link to="#play">
+              <Link to="dashboard/abc">
                 {" "}
                 <RainbowButton>Play Now</RainbowButton>
               </Link>
