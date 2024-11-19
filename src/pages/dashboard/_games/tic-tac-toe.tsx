@@ -19,6 +19,7 @@ export function TicTacToe() {
   const [winner, setWinner] = useState<Player | "Draw" | null>(null);
   const [winningLine, setWinningLine] = useState<WinningLine>(null);
   const [isPlayingWithAI, setIsPlayingWithAI] = useState<boolean>(false);
+  const [gameOver, setGameOver] = useState<boolean>(false);
 
   useEffect(() => {
     if (isPlayingWithAI) {
@@ -46,33 +47,33 @@ export function TicTacToe() {
   ];
 
   const minimax = (
-    newBoard: Player[],
+    board: Player[],
     depth: number,
     isMaximizing: boolean
   ): number => {
-    const [gameWinner] = checkWinner(newBoard);
+    const [gameWinner] = checkWinner(board);
     if (gameWinner === "O") return 10 - depth;
     if (gameWinner === "X") return depth - 10;
-    if (!newBoard.includes(null)) return 0;
+    if (!board.includes(null)) return 0;
 
     if (isMaximizing) {
       let bestScore = -Infinity;
-      for (let i = 0; i < newBoard.length; i++) {
-        if (newBoard[i] === null) {
+      for (let i = 0; i < board.length; i++) {
+        if (board[i] === null) {
+          const newBoard = [...board];
           newBoard[i] = "O";
           const score = minimax(newBoard, depth + 1, false);
-          newBoard[i] = null;
           bestScore = Math.max(score, bestScore);
         }
       }
       return bestScore;
     } else {
       let bestScore = Infinity;
-      for (let i = 0; i < newBoard.length; i++) {
-        if (newBoard[i] === null) {
+      for (let i = 0; i < board.length; i++) {
+        if (board[i] === null) {
+          const newBoard = [...board];
           newBoard[i] = "X";
           const score = minimax(newBoard, depth + 1, true);
-          newBoard[i] = null;
           bestScore = Math.min(score, bestScore);
         }
       }
@@ -86,9 +87,9 @@ export function TicTacToe() {
 
     for (let i = 0; i < currentBoard.length; i++) {
       if (currentBoard[i] === null) {
-        currentBoard[i] = "O";
-        const score = minimax(currentBoard, 0, false);
-        currentBoard[i] = null;
+        const newBoard = [...currentBoard];
+        newBoard[i] = "O";
+        const score = minimax(newBoard, 0, false);
         if (score > bestScore) {
           bestScore = score;
           bestMove = i;
@@ -121,7 +122,7 @@ export function TicTacToe() {
   };
 
   const handleClick = (index: number) => {
-    if (board[index] || winner) return;
+    if (board[index] || gameOver) return;
 
     const newBoard = [...board];
     newBoard[index] = isXNext ? "X" : "O";
@@ -131,6 +132,7 @@ export function TicTacToe() {
     if (gameWinner) {
       setWinner(gameWinner);
       setWinningLine(gameWinningLine);
+      setGameOver(true); // Set gameOver to true
     } else {
       setIsXNext(!isXNext);
     }
@@ -141,6 +143,7 @@ export function TicTacToe() {
     setWinningLine(null);
     setWinner(null);
     setIsXNext(!aiGoesFirst);
+    setGameOver(false); // Reset gameOver to false
 
     if (aiGoesFirst) {
       const newBoard = Array(9).fill(null);
@@ -151,37 +154,49 @@ export function TicTacToe() {
   };
 
   const aiMove = () => {
-    if (winner) return; // Nếu đã có người thắng, AI không được đi
-    if (isXNext) return; // Nếu không phải lượt của AI, dừng lại
+    if (gameOver || isXNext) return;
 
-    const bestMove = findBestMove(board); // Tìm nước đi tối ưu
+    const bestMove = findBestMove(board);
     if (bestMove !== -1) {
       const newBoard = [...board];
-      newBoard[bestMove] = "O"; // AI đi "O"
+      newBoard[bestMove] = "O";
       setBoard(newBoard);
 
       const [gameWinner, gameWinningLine] = checkWinner(newBoard);
       if (gameWinner) {
         setWinner(gameWinner);
         setWinningLine(gameWinningLine);
+        setGameOver(true); // Set gameOver to true
       } else {
-        setIsXNext(true); // Chuyển lượt cho người chơi
+        setIsXNext(true);
       }
     }
   };
 
-  const renderSquare = (index: number) => (
-    <Button
-      variant="outline"
-      className="w-20 h-20 text-4xl font-bold relative"
-      onClick={() => handleClick(index)}
-    >
-      {board[index]}
-      {winningLine && winningLine.includes(index) && (
-        <div className="absolute inset-0 bg-green-500 opacity-30" />
-      )}
-    </Button>
-  );
+  const renderSquare = (index: number) => {
+    const value = board[index];
+    let colorClass = "";
+
+    if (value === "X") {
+      colorClass = "text-red-800"; // Màu đậm cho 'X'
+    } else if (value === "O") {
+      colorClass = "text-blue-800"; // Màu đậm cho 'O'
+    }
+
+    return (
+      <Button
+        variant="outline"
+        className="w-20 h-20 text-4xl font-extrabold relative"
+        onClick={() => handleClick(index)}
+        disabled={gameOver}
+      >
+        <span className={`${colorClass}`}>{value}</span>
+        {winningLine && winningLine.includes(index) && (
+          <div className="absolute inset-0 bg-green-700 opacity-30" />
+        )}
+      </Button>
+    );
+  };
 
   const handlePlayWithAI = () => {
     setIsPlayingWithAI(!isPlayingWithAI);
@@ -189,13 +204,13 @@ export function TicTacToe() {
 
   return (
     <div className="flex flex-col items-center justify-center mt-5 bg-background relative w-[100%]">
-      <div className="absolute top-4 left-4">
-        <Button onClick={handlePlayWithAI} className="gap-2 w-40">
+      <div className="absolute top-12 left-4 ">
+        <Button onClick={handlePlayWithAI} className="gap-2 w-40 md:w-48">
           {isPlayingWithAI ? "Play with Human" : "Play with AI"}
         </Button>
       </div>
 
-      <h1 className="text-4xl font-bold mb-8">Tic-Tac-Toe 3x3</h1>
+      <h1 className="text-4xl font-bold mb-20 ">Tic-Tac-Toe 3x3</h1>
 
       <div className="mb-4 relative">
         <div className="flex">
@@ -215,11 +230,13 @@ export function TicTacToe() {
         </div>
       </div>
 
-      <div className="text-xl font-semibold mb-4">
+      <div className="text-center text-xl font-semibold mb-4">
         {winner ? "Game Over" : `Next player: ${isXNext ? "X" : "O"}`}
       </div>
 
-      <Button onClick={() => resetGame(isPlayingWithAI)}>Reset Game</Button>
+      <Button onClick={() => resetGame(isPlayingWithAI)} className="mb-4">
+        Reset Game
+      </Button>
 
       {winner && (
         <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center backdrop-blur-sm">
