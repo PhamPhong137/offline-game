@@ -9,7 +9,7 @@ import { NotFoundPage } from "./pages/404";
 import { LoginPage } from "./pages/(auth)/login";
 import DashboardLayout from "./pages/dashboard/dashboard-layout";
 import { TicTacToe } from "./pages/dashboard/_games/tic-tac-toe";
-import { GamesList } from "./pages/dashboard/game-list";
+import { GamesList } from "./pages/dashboard/_games/game-list";
 
 const queryClient = new QueryClient();
 
@@ -45,6 +45,14 @@ const routers = createBrowserRouter([
                 children: [
                   {
                     path:"tic-tac-toe",
+                    element: <TicTacToe />
+                  },
+                  {
+                    path:"tic-tac-toe/3x3",
+                    element: <TicTacToe />
+                  },
+                  {
+                    path:"tic-tac-toe/5x5",
                     element: <TicTacToe />
                   }
                 ],

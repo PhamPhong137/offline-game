@@ -112,9 +112,9 @@ export function GamesList() {
         {currentGames.map((game) => (
           <Card
             key={game.id}
-            className="hover:shadow-xl transition-all transform hover:-translate-y-2 bg-gradient-to-r from-blue-100 to-indigo-200 rounded-lg overflow-hidden"
+            className="hover:shadow-xl transition-all transform hover:-translate-y-2 bg-gradient-to-r  rounded-lg overflow-hidden"
           >
-            <CardHeader className="space-y-2 p-4 bg-gradient-to-r from-indigo-300 to-blue-400 text-white">
+            <CardHeader className="space-y-2 p-4 bg-gradient-to-r from-purple-400 to-pink-400 text-white">
               <CardTitle className="text-xl font-semibold flex items-center gap-3">
                 <span className="text-3xl">{game.icon}</span>
                 {game.name}
